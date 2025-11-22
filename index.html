@@ -137,7 +137,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.88);
+        background: rgba(0, 0, 0, 0.92);
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -224,15 +224,115 @@
         background: rgba(255, 0, 255, 0.1);
       }
 
-      /* Table Selection */
+      /* New Table Selector UI - CHIPS STYLE */
+      #active-tables-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 15px;
+        width: 100%;
+      }
+
+      #active-tables-label {
+        font-family: "Press Start 2P", cursive;
+        font-size: 0.6rem;
+        color: #888;
+        margin-bottom: 8px;
+        letter-spacing: 1px;
+      }
+
+      #active-tables-summary {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        max-width: 90%;
+      }
+
+      .summary-chip {
+        font-family: "Press Start 2P", cursive;
+        color: var(--neon-blue);
+        border: 1px solid var(--neon-blue);
+        background: rgba(0, 243, 255, 0.15);
+        padding: 8px 10px;
+        font-size: 0.8rem;
+        border-radius: 6px;
+        box-shadow: 0 0 5px var(--neon-blue);
+        text-shadow: 0 0 2px var(--neon-blue);
+        transition: transform 0.2s;
+      }
+
+      .summary-chip:hover {
+        transform: scale(1.1);
+        background: rgba(0, 243, 255, 0.3);
+      }
+
+      #modify-btn {
+        background: transparent;
+        border: 1px solid var(--neon-pink);
+        color: var(--neon-pink);
+        font-family: "Press Start 2P";
+        font-size: 0.6rem;
+        padding: 8px 12px;
+        cursor: pointer;
+        margin-bottom: 20px;
+        border-radius: 4px;
+        margin-top: 10px;
+      }
+
+      #modify-btn:hover {
+        background: var(--neon-pink);
+        color: black;
+      }
+
+      #settings-panel {
+        background: rgba(0, 0, 0, 0.9);
+        border: 1px solid var(--neon-blue);
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        display: none; /* Hidden by default */
+        flex-direction: column;
+        align-items: center;
+        max-width: 90%;
+        position: absolute; /* Overlay on top of start screen content */
+        z-index: 30;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+      }
+
+      .preset-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .preset-btn {
+        background: #222;
+        border: 1px solid #555;
+        color: #aaa;
+        font-family: "Roboto", sans-serif;
+        font-size: 0.8rem;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+
+      .preset-btn:hover {
+        border-color: white;
+        color: white;
+      }
+
       .table-selector {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
         gap: 8px;
         max-width: 450px;
-        margin-bottom: 20px;
-        padding: 0 10px;
       }
 
       .table-btn {
@@ -265,6 +365,30 @@
         margin-top: 10px;
       }
 
+      /* Mistake Review List */
+      #mistakes-container {
+        margin: 10px 0 20px 0;
+        max-height: 150px;
+        overflow-y: auto;
+        width: 90%;
+        max-width: 400px;
+        background: rgba(255, 0, 85, 0.1);
+        border: 1px solid var(--neon-red);
+        border-radius: 8px;
+        padding: 10px;
+        text-align: center;
+        display: none; /* Hidden by default */
+      }
+
+      .mistake-item {
+        font-family: "Roboto", monospace;
+        color: #ffcccc;
+        font-size: 0.9rem;
+        margin: 5px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-bottom: 2px;
+      }
+
       /* Animations */
       @keyframes pulse-scale {
         0% {
@@ -295,7 +419,7 @@
         display: none !important;
       }
 
-      /* Floating Messages (Level Up, Powerups) */
+      /* Floating Messages */
       #center-msg {
         position: absolute;
         top: 40%;
@@ -328,7 +452,22 @@
         z-index: 8;
       }
 
-      /* Checkbox Styles */
+      /* Freeze Overlay */
+      #freeze-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 243, 255, 0.15);
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s;
+        z-index: 7;
+        border: 5px solid var(--neon-blue);
+        box-sizing: border-box;
+      }
+
       .option-row {
         display: flex;
         gap: 20px;
@@ -356,6 +495,7 @@
     <div id="game-container">
       <canvas id="gameCanvas"></canvas>
       <div id="damage-overlay"></div>
+      <div id="freeze-overlay"></div>
 
       <!-- HUD -->
       <div id="hud" class="ui-layer">
@@ -379,8 +519,36 @@
         <h1>MATHS <span>INVADERS</span></h1>
         <div id="start-high-score" class="high-score-label">MEILLEUR SCORE: 0</div>
 
-        <div class="selector-label">CHOISIS TES TABLES</div>
-        <div id="table-buttons" class="table-selector"></div>
+        <!-- NICE VISUAL CHIPS FOR TABLES -->
+        <div id="active-tables-container">
+          <div id="active-tables-label">TABLES ACTIVES</div>
+          <div id="active-tables-summary">
+            <!-- Chips inserted by JS -->
+          </div>
+        </div>
+
+        <button id="modify-btn" onclick="toggleSettings()">⚙️ MODIFIER</button>
+
+        <!-- Expanded Settings Panel -->
+        <div id="settings-panel">
+          <div class="selector-label">PRÉRÉGLAGES</div>
+          <div class="preset-row">
+            <button class="preset-btn" onclick="applyPreset([2,5,10])">Débutant (2,5,10)</button>
+            <button class="preset-btn" onclick="applyPreset([2,3,4,5,10])">Intermédiaire</button>
+            <button class="preset-btn" onclick="applyPreset([6,7,8,9])">Expert</button>
+            <button class="preset-btn" onclick="applyPreset([2,3,4,5,6,7,8,9,10])">Tout</button>
+          </div>
+
+          <div class="selector-label">CHOIX MANUEL</div>
+          <div id="table-buttons" class="table-selector"></div>
+          <button
+            class="preset-btn"
+            style="margin-top: 15px; border-color: var(--neon-green); color: var(--neon-green); width: 100%; padding: 10px"
+            onclick="toggleSettings()"
+          >
+            OK, TERMINÉ
+          </button>
+        </div>
 
         <p style="color: #aaa; font-size: 0.8rem; margin-bottom: 20px">
           <span style="color: var(--neon-red)">❤ Attention !</span> Tirer sur une mauvaise réponse = -1 Vie
@@ -390,7 +558,7 @@
 
         <div class="option-row">
           <label class="checkbox-label"> <input type="checkbox" id="sound-toggle" checked /> SON </label>
-          <label class="checkbox-label" style="color: var(--neon-yellow)"> <input type="checkbox" id="cheat-toggle" /> MODE RÉVISION (Indice) </label>
+          <label class="checkbox-label" style="color: var(--neon-yellow)"> <input type="checkbox" id="cheat-toggle" /> MODE RÉVISION </label>
         </div>
         <div style="font-size: 0.6rem; color: #888; margin-top: 5px">(Pas de sauvegarde de score en révision)</div>
       </div>
@@ -401,6 +569,12 @@
         <p>Ton score final : <span id="final-score" style="color: white; font-weight: bold; font-size: 1.5rem">0</span></p>
         <div id="new-record-msg" class="hidden">NOUVEAU RECORD !</div>
         <p id="motivation-msg" style="color: var(--neon-green)">Bien joué !</p>
+
+        <div id="mistakes-container">
+          <div style="color: var(--neon-yellow); font-size: 0.8rem; margin-bottom: 5px; font-family: &quot;Press Start 2P&quot;">À RÉVISER :</div>
+          <div id="mistakes-list"></div>
+        </div>
+
         <div id="end-high-score" class="high-score-label" style="font-size: 0.8rem">MEILLEUR SCORE: 0</div>
         <button class="btn" onclick="startGame()">REJOUER</button>
         <button class="btn btn-secondary" onclick="goToMenu()">MENU</button>
@@ -431,7 +605,13 @@
       const newRecordMsg = document.getElementById("new-record-msg");
       const centerMsg = document.getElementById("center-msg");
       const damageOverlay = document.getElementById("damage-overlay");
+      const freezeOverlay = document.getElementById("freeze-overlay");
       const tableButtonsContainer = document.getElementById("table-buttons");
+      const mistakesContainer = document.getElementById("mistakes-container");
+      const mistakesList = document.getElementById("mistakes-list");
+      const settingsPanel = document.getElementById("settings-panel");
+      const activeTablesSummary = document.getElementById("active-tables-summary");
+      const modifyBtn = document.getElementById("modify-btn");
 
       // --- Game Variables ---
       let gameRunning = false;
@@ -444,6 +624,8 @@
       let frames = 0;
       let lastTime = 0;
       let isCheatMode = false;
+      let timeScale = 1.0;
+      let freezeTimer = 0;
 
       // Entities
       let player;
@@ -456,10 +638,11 @@
 
       // Logic
       let currentQuestion = null;
-      let selectedTables = [2, 3, 4, 5, 6, 7, 8, 9, 10];
+      let selectedTables = [2, 3, 4, 5, 10]; // Default
       let activeTables = [...selectedTables];
       let enemySpeedBase = 1.5;
       let scoreForLife = 0;
+      let mistakes = {}; // Stores { "2x2": count }
       let audioCtx = null;
 
       // --- Audio Engine ---
@@ -516,6 +699,15 @@
               osc.start(now);
               osc.stop(now + 0.3);
               break;
+            case "freeze":
+              osc.type = "sine";
+              osc.frequency.setValueAtTime(800, now);
+              osc.frequency.exponentialRampToValueAtTime(200, now + 0.5);
+              gain.gain.setValueAtTime(0.1, now);
+              gain.gain.linearRampToValueAtTime(0, now + 0.5);
+              osc.start(now);
+              osc.stop(now + 0.5);
+              break;
             case "levelup":
               osc.type = "triangle";
               osc.frequency.setValueAtTime(400, now);
@@ -554,12 +746,10 @@
           const dx = this.targetX - this.x;
           this.x += dx * 0.15;
 
-          // Tilt calculation based on speed
           this.tilt = dx * 0.5;
           if (this.tilt > 20) this.tilt = 20;
           if (this.tilt < -20) this.tilt = -20;
 
-          // Clamp screen
           if (this.x < this.width / 2) this.x = this.width / 2;
           if (this.x > canvas.width - this.width / 2) this.x = canvas.width - this.width / 2;
 
@@ -577,7 +767,7 @@
         draw() {
           ctx.save();
           ctx.translate(this.x, this.y);
-          ctx.rotate((this.tilt * Math.PI) / 180); // Apply tilt
+          ctx.rotate((this.tilt * Math.PI) / 180);
 
           // Shield Effect
           if (this.shieldActive) {
@@ -586,6 +776,14 @@
             ctx.strokeStyle = `rgba(0, 255, 157, ${0.5 + Math.sin(frames * 0.2) * 0.3})`;
             ctx.lineWidth = 3;
             ctx.stroke();
+
+            // Bar
+            ctx.fillStyle = "#00ff9d";
+            ctx.fillRect(-20, 30, 40 * (this.shieldTimer / 600), 4);
+          } else if (this.weaponLevel > 1) {
+            // Weapon Bar
+            ctx.fillStyle = "#00f3ff";
+            ctx.fillRect(-20, 30, 40 * (this.powerupTimer / 600), 4);
           }
 
           // Ship Body
@@ -615,15 +813,12 @@
 
         shoot() {
           AudioEngine.play("shoot");
-
-          // Recoil
           this.y += 4;
           setTimeout(() => (this.y -= 4), 50);
 
           if (this.weaponLevel === 1) {
             bullets.push(new Bullet(this.x, this.y - 20));
           } else {
-            // Double shot
             bullets.push(new Bullet(this.x - 15, this.y - 10));
             bullets.push(new Bullet(this.x + 15, this.y - 10));
           }
@@ -631,7 +826,7 @@
 
         activateShield() {
           this.shieldActive = true;
-          this.shieldTimer = 600; // 10 seconds approx
+          this.shieldTimer = 600;
           AudioEngine.play("powerup");
           showCenterMessage("BOUCLIER !", "#00ff9d");
         }
@@ -680,8 +875,8 @@
         }
 
         update() {
-          this.y += this.speed;
-          this.angle += this.spin;
+          this.y += this.speed * timeScale; // Affected by Freeze
+          this.angle += this.spin * timeScale;
         }
 
         draw() {
@@ -699,14 +894,10 @@
           ctx.closePath();
 
           ctx.fillStyle = "#2a2a35";
-
-          // Default style
           ctx.strokeStyle = "#ff0055";
           ctx.lineWidth = 3;
 
-          // CHEAT MODE VISUAL HINT
           if (isCheatMode && this.isCorrect) {
-            // Flashing green effect
             const flash = Math.sin(frames * 0.2) > 0;
             ctx.strokeStyle = flash ? "#00ff00" : "#ffffff";
             ctx.lineWidth = 5;
@@ -716,9 +907,8 @@
 
           ctx.fill();
           ctx.stroke();
-          ctx.shadowBlur = 0; // Reset shadow
+          ctx.shadowBlur = 0;
 
-          // Text
           ctx.rotate(-this.angle);
           ctx.fillStyle = "white";
           ctx.font = "bold 18px 'Press Start 2P'";
@@ -760,8 +950,8 @@
         constructor(x, y, type) {
           this.x = x;
           this.y = y;
-          this.type = type; // 'shield', 'double', 'life'
-          this.radius = 15;
+          this.type = type; // 'shield', 'double', 'life', 'freeze'
+          this.radius = 16;
           this.speed = 3;
           this.angle = 0;
         }
@@ -786,6 +976,10 @@
           if (this.type === "life") {
             color = "#ff0055";
             char = "♥";
+          }
+          if (this.type === "freeze") {
+            color = "#00ffff";
+            char = "❄";
           }
 
           ctx.fillStyle = color;
@@ -843,7 +1037,7 @@
           this.baseSpeed = (Math.random() * 2 + 0.5) * speedMult;
         }
         update() {
-          this.y += this.baseSpeed * (1 + level * 0.1);
+          this.y += this.baseSpeed * (1 + level * 0.1) * timeScale; // Affected by freeze
           if (this.y > canvas.height) {
             this.y = 0;
             this.x = Math.random() * canvas.width;
@@ -857,11 +1051,83 @@
 
       // --- Game Management Functions ---
 
+      const TABLE_STORAGE_KEY = "mathsInvaders_tables";
+
+      function loadTables() {
+        const stored = localStorage.getItem(TABLE_STORAGE_KEY);
+        if (stored) {
+          try {
+            selectedTables = JSON.parse(stored);
+          } catch (e) {
+            selectedTables = [2, 3, 4, 5, 10];
+          }
+        } else {
+          selectedTables = [2, 3, 4, 5, 10]; // Default
+        }
+        updateActiveTablesText();
+      }
+
+      function saveTables() {
+        localStorage.setItem(TABLE_STORAGE_KEY, JSON.stringify(selectedTables));
+        updateActiveTablesText();
+      }
+
+      function updateActiveTablesText() {
+        // New fancy chip logic
+        activeTablesSummary.innerHTML = "";
+
+        if (selectedTables.length === 9) {
+          const chip = document.createElement("div");
+          chip.className = "summary-chip";
+          chip.style.borderColor = "var(--neon-green)";
+          chip.style.color = "var(--neon-green)";
+          chip.textContent = "TOUTES LES TABLES";
+          activeTablesSummary.appendChild(chip);
+          return;
+        }
+
+        if (selectedTables.length === 0) {
+          const chip = document.createElement("div");
+          chip.className = "summary-chip";
+          chip.style.borderColor = "var(--neon-red)";
+          chip.style.color = "var(--neon-red)";
+          chip.textContent = "AUCUNE";
+          activeTablesSummary.appendChild(chip);
+          return;
+        }
+
+        selectedTables.forEach((num) => {
+          const chip = document.createElement("div");
+          chip.className = "summary-chip";
+          chip.textContent = num;
+          activeTablesSummary.appendChild(chip);
+        });
+      }
+
+      function toggleSettings() {
+        if (settingsPanel.style.display === "flex") {
+          settingsPanel.style.display = "none";
+          modifyBtn.style.display = "inline-block";
+        } else {
+          settingsPanel.style.display = "flex";
+          modifyBtn.style.display = "none";
+          initTableButtons(); // Refresh visibility
+        }
+      }
+
+      function applyPreset(presetArray) {
+        selectedTables = [...presetArray];
+        saveTables();
+        initTableButtons(); // Refresh button states
+      }
+
       function initTableButtons() {
         tableButtonsContainer.innerHTML = "";
         for (let i = 2; i <= 10; i++) {
           const btn = document.createElement("button");
-          btn.className = "table-btn active";
+          btn.className = "table-btn";
+          if (selectedTables.includes(i)) btn.classList.add("active");
+
           btn.textContent = i;
           btn.onclick = () => toggleTable(i, btn);
           tableButtonsContainer.appendChild(btn);
@@ -875,7 +1141,6 @@
             selectedTables.splice(index, 1);
             btn.classList.remove("active");
           } else {
-            // Can't unselect last one
             btn.style.transform = "scale(1.2)";
             setTimeout(() => (btn.style.transform = "scale(1)"), 100);
           }
@@ -884,6 +1149,7 @@
           selectedTables.sort((a, b) => a - b);
           btn.classList.add("active");
         }
+        saveTables();
       }
 
       function resizeCanvas() {
@@ -914,15 +1180,49 @@
         const rand = Math.random();
         let type = null;
 
-        if (rand < 0.05) type = "life";
-        else if (rand < 0.15) type = "shield";
-        else if (rand < 0.3) type = "double";
+        // Probabilities
+        if (rand < 0.05)
+          type = "life"; // 5%
+        else if (rand < 0.15)
+          type = "shield"; // 10%
+        else if (rand < 0.25)
+          type = "freeze"; // 10%
+        else if (rand < 0.4) type = "double"; // 15%
 
         if (type) powerups.push(new PowerUp(x, y, type));
       }
 
+      function recordMistake(questionStr) {
+        if (!mistakes[questionStr]) mistakes[questionStr] = 0;
+        mistakes[questionStr]++;
+      }
+
+      function displayMistakes() {
+        mistakesList.innerHTML = "";
+        const entries = Object.entries(mistakes);
+        if (entries.length === 0) {
+          mistakesContainer.style.display = "none";
+          return;
+        }
+
+        mistakesContainer.style.display = "block";
+        // Sort by count
+        entries.sort((a, b) => b[1] - a[1]);
+
+        // Take top 5
+        entries.slice(0, 5).forEach(([txt, count]) => {
+          // Calculate answer for display
+          const parts = txt.split("x");
+          const ans = parseInt(parts[0]) * parseInt(parts[1]);
+
+          const div = document.createElement("div");
+          div.className = "mistake-item";
+          div.textContent = `${txt} = ${ans}`;
+          mistakesList.appendChild(div);
+        });
+      }
+
       function generateQuestion() {
-        // Difficulty scaling
         enemySpeedBase = 1.5 + score / 2000;
 
         const a = activeTables[Math.floor(Math.random() * activeTables.length)];
@@ -930,7 +1230,6 @@
         const answer = a * b;
         currentQuestion = { a, b, answer };
 
-        // UI Animation
         questionEl.textContent = `${a} x ${b}`;
         questionEl.style.display = "block";
         questionEl.classList.remove("pulse-anim");
@@ -949,7 +1248,6 @@
         if (level > 2) count = 4;
         if (level > 5) count = Math.min(5, maxLanes);
 
-        // Positions
         const positions = [];
         const step = canvas.width / count;
         for (let i = 0; i < count; i++) positions.push(step * i + step / 2);
@@ -962,7 +1260,6 @@
             val = correctAnswer;
             enemies.push(new Enemy(val, true));
           } else {
-            // Wrong answers logic
             do {
               let offset = Math.floor(Math.random() * 5) + 1;
               val = Math.random() > 0.5 ? correctAnswer + offset : correctAnswer - offset;
@@ -977,11 +1274,9 @@
       }
 
       function checkCollisions() {
-        // Bullet vs Enemy
         for (let i = enemies.length - 1; i >= 0; i--) {
           const e = enemies[i];
 
-          // Player vs Enemy (Crash)
           const distPlayer = Math.hypot(e.x - player.x, e.y - player.y);
           if (distPlayer < e.radius + 30) {
             if (!player.shieldActive) {
@@ -991,7 +1286,6 @@
               generateQuestion();
               return;
             } else {
-              // Shield destroys enemy
               createExplosion(e.x, e.y, "#fff");
               enemies.splice(i, 1);
               continue;
@@ -1007,13 +1301,11 @@
               bullets.splice(j, 1);
 
               if (e.isCorrect) {
-                // CORRECT
                 handleCorrectAnswer(e.x, e.y);
                 enemies = [];
                 generateQuestion();
-                return; // End loop to prevent logic errors
+                return;
               } else {
-                // WRONG
                 handleWrongAnswer(e.x, e.y);
                 enemies.splice(i, 1);
               }
@@ -1022,7 +1314,6 @@
           }
         }
 
-        // Player vs Powerup
         for (let i = powerups.length - 1; i >= 0; i--) {
           const p = powerups[i];
           const dist = Math.hypot(p.x - player.x, p.y - player.y);
@@ -1043,7 +1334,6 @@
         spawnFloatingText(`+${pts}`, x, y, "#00ff9d");
         AudioEngine.play("explode");
 
-        // Chance to drop powerup
         dropPowerup(x, y);
 
         checkLevelUp();
@@ -1052,7 +1342,6 @@
 
       function handleWrongAnswer(x, y) {
         loseLife();
-        // SHOW CORRECTION
         spawnFloatingText(`${currentQuestion.a}x${currentQuestion.b}=${currentQuestion.answer}`, x, y, "#ffea00");
       }
 
@@ -1061,7 +1350,7 @@
           if (lives < maxLives) {
             lives++;
             spawnFloatingText("VIE +1", player.x, player.y - 40, "#ff0055");
-            AudioEngine.play("levelup"); // reuse sound
+            AudioEngine.play("levelup");
           } else {
             score += 500;
             spawnFloatingText("+500", player.x, player.y - 40, "#ff0055");
@@ -1070,7 +1359,17 @@
           player.activateShield();
         } else if (type === "double") {
           player.activateDouble();
+        } else if (type === "freeze") {
+          activateFreeze();
         }
+      }
+
+      function activateFreeze() {
+        freezeTimer = 300; // 5 seconds
+        timeScale = 0.2;
+        freezeOverlay.style.opacity = 1;
+        AudioEngine.play("freeze");
+        showCenterMessage("FREEZE !", "#00ffff");
       }
 
       function createExplosion(x, y, color) {
@@ -1101,17 +1400,52 @@
       function loseLife() {
         if (player.shieldActive) return;
 
+        // Record the mistake
+        if (currentQuestion) {
+          recordMistake(`${currentQuestion.a} x ${currentQuestion.b}`);
+        }
+
         lives--;
         combo = 0;
         damageOverlay.style.opacity = 0.8;
         setTimeout(() => (damageOverlay.style.opacity = 0), 150);
         AudioEngine.play("wrong");
 
-        // Shake effect
         canvas.style.transform = `translate(${Math.random() * 10 - 5}px, ${Math.random() * 10 - 5}px)`;
         setTimeout(() => (canvas.style.transform = "none"), 50);
 
         if (lives <= 0) gameOver();
+      }
+
+      function drawGrid() {
+        // Retro synthwave grid
+        ctx.save();
+        ctx.strokeStyle = "rgba(255, 0, 255, 0.2)";
+        ctx.lineWidth = 1;
+
+        const horizon = canvas.height * 0.4; // Vanishing point above center
+        const gridSpeed = (frames * 2) % 40;
+
+        // Vertical lines (perspective)
+        for (let i = -10; i <= 10; i++) {
+          const x = canvas.width / 2 + i * 100;
+          ctx.beginPath();
+          ctx.moveTo(x, canvas.height);
+          ctx.lineTo(canvas.width / 2 + i * 20, horizon);
+          ctx.stroke();
+        }
+
+        // Horizontal lines (moving down)
+        for (let i = 0; i < 10; i++) {
+          const y = canvas.height - ((i * 40 + gridSpeed) % canvas.height);
+          if (y > horizon) {
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(canvas.width, y);
+            ctx.stroke();
+          }
+        }
+        ctx.restore();
       }
 
       function gameLoop(timestamp) {
@@ -1121,7 +1455,17 @@
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+        // Update Freeze Logic
+        if (freezeTimer > 0) {
+          freezeTimer--;
+          if (freezeTimer <= 0) {
+            timeScale = 1.0;
+            freezeOverlay.style.opacity = 0;
+          }
+        }
+
         // Background
+        drawGrid();
         stars.forEach((s) => {
           s.update();
           s.draw();
@@ -1165,7 +1509,7 @@
           enemies = [];
           generateQuestion();
         } else if (enemies.length === 0 && lives > 0) {
-          generateQuestion(); // Safety regen
+          generateQuestion();
         }
 
         checkCollisions();
@@ -1216,6 +1560,10 @@
         lives = 3;
         combo = 0;
         scoreForLife = 0;
+        mistakes = {};
+        timeScale = 1.0;
+        freezeTimer = 0;
+        freezeOverlay.style.opacity = 0;
 
         player = new Player();
         enemies = [];
@@ -1235,7 +1583,7 @@
 
         if (isCheatMode) {
           cheatIndEl.style.display = "block";
-          livesEl.style.color = "#888"; // Dim visual for revision
+          livesEl.style.color = "#888";
         } else {
           cheatIndEl.style.display = "none";
           livesEl.style.color = "var(--neon-red)";
@@ -1252,6 +1600,9 @@
         questionEl.style.display = "none";
         gameOverScreen.classList.remove("hidden");
         finalScoreEl.textContent = score;
+
+        // Display pedagogical mistakes
+        displayMistakes();
 
         if (isCheatMode) {
           newRecordMsg.classList.add("hidden");
@@ -1313,21 +1664,16 @@
         if (gameRunning) player.shoot();
       });
 
-      // Gestion tactile améliorée (Tap vs Drag)
       let touchStartTime = 0;
-
       window.addEventListener(
         "touchstart",
         (e) => {
           if (gameRunning) {
-            // Support Multitouch : le 2ème doigt tire immédiatement
             if (e.touches.length > 1) {
               e.preventDefault();
               player.shoot();
               return;
             }
-
-            // Premier doigt : on commence à bouger mais on ne tire pas encore
             touchStartTime = Date.now();
             player.targetX = e.touches[0].clientX;
           }
@@ -1339,19 +1685,15 @@
         "touchend",
         (e) => {
           if (gameRunning) {
-            // Si le contact a duré moins de 250ms, c'est un TAP -> TIR
-            // Si c'était long (un glisser pour se déplacer), on ne tire pas
             const duration = Date.now() - touchStartTime;
-            if (duration < 250) {
-              player.shoot();
-            }
+            if (duration < 250) player.shoot();
           }
         },
         { passive: false },
       );
 
       // Init
-      initTableButtons();
+      loadTables(); // Load from storage first
       loadHighScore();
     </script>
   </body>
