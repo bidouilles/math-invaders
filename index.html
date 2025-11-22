@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Maths Invaders : Apprends les Tables !</title>
+    <title>Maths Invaders Ultimate</title>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@700&display=swap");
 
@@ -22,7 +22,9 @@
         background-color: var(--bg-color);
         font-family: "Roboto", sans-serif;
         color: white;
-        touch-action: none; /* Empêche le scroll sur mobile */
+        touch-action: none;
+        user-select: none;
+        -webkit-user-select: none;
       }
 
       #game-container {
@@ -35,7 +37,7 @@
       }
 
       canvas {
-        box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
+        box-shadow: 0 0 30px rgba(0, 243, 255, 0.15);
         background: radial-gradient(circle at center, #13132a 0%, #000000 100%);
       }
 
@@ -50,7 +52,7 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        padding: 20px;
+        padding: 15px;
         box-sizing: border-box;
       }
 
@@ -58,61 +60,84 @@
         display: none;
         width: 100%;
         justify-content: space-between;
+        align-items: flex-start;
         font-family: "Press Start 2P", cursive;
         text-shadow: 2px 2px 0 #000;
         z-index: 10;
       }
 
+      .hud-column {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
       .hud-item {
-        font-size: 1rem; /* Slightly smaller for mobile safety */
+        font-size: 0.8rem;
+        margin-bottom: 5px;
       }
 
       @media (min-width: 600px) {
         .hud-item {
           font-size: 1.2rem;
         }
+        #hud {
+          padding: 20px;
+        }
       }
 
       #score-display {
         color: var(--neon-blue);
       }
+      #lives-display {
+        color: var(--neon-red);
+        letter-spacing: 2px;
+      }
       #combo-display {
         color: var(--neon-green);
         display: none;
+        text-align: right;
       }
       #level-display {
         color: var(--neon-pink);
+        text-align: right;
+      }
+      #cheat-indicator {
+        color: var(--neon-yellow);
+        font-size: 0.7rem;
+        display: none;
       }
 
       /* Question Box */
       #question-box {
         position: absolute;
-        top: 15%;
+        top: 12%;
         left: 50%;
         transform: translateX(-50%);
         font-family: "Press Start 2P", cursive;
-        font-size: 2.5rem;
+        font-size: 2rem;
         color: white;
         text-shadow:
           0 0 10px var(--neon-blue),
           0 0 20px var(--neon-blue);
         z-index: 5;
         display: none;
-        background: rgba(0, 0, 0, 0.6);
-        padding: 15px 30px;
-        border-radius: 15px;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 15px 25px;
+        border-radius: 12px;
         border: 2px solid var(--neon-blue);
         box-shadow: 0 0 15px var(--neon-blue) inset;
+        white-space: nowrap;
       }
 
-      /* Screens (Menu, Game Over) */
+      /* Screens */
       .screen {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.85);
+        background: rgba(0, 0, 0, 0.88);
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -120,23 +145,24 @@
         z-index: 20;
         pointer-events: auto;
         transition: opacity 0.3s;
-        backdrop-filter: blur(5px);
+        backdrop-filter: blur(8px);
       }
 
       h1 {
         font-family: "Press Start 2P", cursive;
-        font-size: 2rem;
+        font-size: 1.8rem;
         color: var(--neon-blue);
         text-align: center;
-        margin-bottom: 20px;
-        text-shadow: 0 0 10px var(--neon-blue);
-        line-height: 1.5;
-        padding: 0 20px;
+        margin-bottom: 15px;
+        text-shadow: 0 0 15px var(--neon-blue);
+        line-height: 1.4;
+        padding: 0 10px;
       }
 
       @media (min-width: 600px) {
         h1 {
           font-size: 3rem;
+          margin-bottom: 30px;
         }
       }
 
@@ -145,42 +171,49 @@
       }
 
       p {
-        font-size: 1.1rem;
+        font-size: 1rem;
         text-align: center;
         max-width: 600px;
-        margin-bottom: 20px;
-        line-height: 1.6;
+        margin-bottom: 15px;
+        line-height: 1.5;
         padding: 0 20px;
+        color: #ddd;
       }
 
       .high-score-label {
         font-family: "Press Start 2P", cursive;
         color: var(--neon-yellow);
-        margin-bottom: 30px;
-        font-size: 1rem;
+        margin-bottom: 20px;
+        font-size: 0.8rem;
         text-shadow: 0 0 5px var(--neon-yellow);
       }
 
       .btn {
         font-family: "Press Start 2P", cursive;
-        background: transparent;
+        background: rgba(0, 255, 157, 0.1);
         color: white;
         border: 2px solid var(--neon-green);
-        padding: 15px 30px;
-        font-size: 1.2rem;
+        padding: 15px 40px;
+        font-size: 1.1rem;
         cursor: pointer;
         transition: all 0.2s;
         text-transform: uppercase;
-        box-shadow: 0 0 10px var(--neon-green);
-        border-radius: 5px;
+        box-shadow: 0 0 15px var(--neon-green);
+        border-radius: 8px;
         margin: 10px;
       }
 
-      .btn:hover {
-        background: var(--neon-green);
-        color: black;
-        transform: scale(1.05);
-        box-shadow: 0 0 20px var(--neon-green);
+      .btn:active {
+        transform: scale(0.95);
+      }
+
+      @media (hover: hover) {
+        .btn:hover {
+          background: var(--neon-green);
+          color: black;
+          transform: scale(1.05);
+          box-shadow: 0 0 25px var(--neon-green);
+        }
       }
 
       .btn-secondary {
@@ -188,26 +221,51 @@
         box-shadow: 0 0 10px var(--neon-pink);
         font-size: 0.8rem;
         padding: 10px 20px;
+        background: rgba(255, 0, 255, 0.1);
       }
-      .btn-secondary:hover {
-        background: var(--neon-pink);
-        box-shadow: 0 0 20px var(--neon-pink);
+
+      /* Table Selection */
+      .table-selector {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        max-width: 450px;
+        margin-bottom: 20px;
+        padding: 0 10px;
+      }
+
+      .table-btn {
+        font-family: "Press Start 2P", cursive;
+        background: transparent;
+        color: #555;
+        border: 2px solid #444;
+        padding: 12px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        border-radius: 6px;
+        min-width: 45px;
+      }
+
+      .table-btn.active {
+        border-color: var(--neon-blue);
+        color: white;
+        box-shadow: 0 0 10px var(--neon-blue);
+        background: rgba(0, 243, 255, 0.2);
+        text-shadow: 0 0 5px var(--neon-blue);
+      }
+
+      .selector-label {
+        font-family: "Press Start 2P", cursive;
+        font-size: 0.7rem;
+        color: var(--neon-blue);
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        margin-top: 10px;
       }
 
       /* Animations */
-      @keyframes pulse {
-        0% {
-          transform: translateX(-50%) scale(1);
-        }
-        50% {
-          transform: translateX(-50%) scale(1.1);
-        }
-        100% {
-          transform: translateX(-50%) scale(1);
-        }
-      }
-
-      /* Nouvelle animation pour les éléments déjà centrés (sans décalage) */
       @keyframes pulse-scale {
         0% {
           transform: scale(1);
@@ -221,95 +279,126 @@
       }
 
       .pulse-anim {
-        animation: pulse 0.5s ease-in-out;
+        animation: pulse-scale 0.3s ease-in-out;
       }
 
-      /* Style dédié pour le message de record */
       #new-record-msg {
         color: var(--neon-yellow);
         font-family: "Press Start 2P";
         margin-bottom: 20px;
-        animation: pulse-scale 1s infinite; /* Utilise la version corrigée */
+        animation: pulse-scale 1s infinite;
         text-align: center;
+        font-size: 1rem;
       }
 
       .hidden {
         display: none !important;
       }
 
-      /* Level Up Notification */
-      #levelup-msg {
+      /* Floating Messages (Level Up, Powerups) */
+      #center-msg {
         position: absolute;
         top: 40%;
         left: 50%;
         transform: translate(-50%, -50%);
         font-family: "Press Start 2P", cursive;
-        font-size: 3rem;
+        font-size: 2.5rem;
         color: var(--neon-yellow);
         text-shadow: 0 0 20px var(--neon-red);
         pointer-events: none;
         opacity: 0;
-        transition: opacity 0.5s;
+        transition:
+          opacity 0.5s,
+          transform 0.5s;
         z-index: 15;
         text-align: center;
         white-space: nowrap;
       }
 
-      /* Mobile Controls Hint */
-      #mobile-hint {
+      #damage-overlay {
         position: absolute;
-        bottom: 20px;
+        top: 0;
+        left: 0;
         width: 100%;
-        text-align: center;
-        color: rgba(255, 255, 255, 0.5);
-        font-size: 0.8rem;
+        height: 100%;
+        background-color: rgba(255, 0, 0, 0.3);
         pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.1s ease-out;
+        z-index: 8;
+      }
+
+      /* Checkbox Styles */
+      .option-row {
+        display: flex;
+        gap: 20px;
+        margin-top: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .checkbox-label {
+        color: white;
+        font-family: "Press Start 2P";
+        font-size: 0.7rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .checkbox-label input {
+        cursor: pointer;
       }
     </style>
   </head>
   <body>
     <div id="game-container">
       <canvas id="gameCanvas"></canvas>
+      <div id="damage-overlay"></div>
 
       <!-- HUD -->
       <div id="hud" class="ui-layer">
-        <div class="hud-item" id="score-display">SCORE: 0</div>
+        <div class="hud-column">
+          <div class="hud-item" id="score-display">SCORE: 0</div>
+          <div class="hud-item" id="lives-display">❤️❤️❤️</div>
+          <div class="hud-item" id="cheat-indicator">MODE RÉVISION</div>
+        </div>
         <div class="hud-item" id="question-box">2 x 2</div>
-        <div class="hud-item" id="level-display">NIV: 1</div>
-      </div>
-
-      <!-- Combo Indicator -->
-      <div style="position: absolute; top: 100px; right: 20px; text-align: right; pointer-events: none">
-        <div
-          id="combo-display"
-          style="font-family: &quot;Press Start 2P&quot;; font-size: 1.5rem; color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green)"
-        >
-          COMBO x2
+        <div class="hud-column" style="align-items: flex-end">
+          <div class="hud-item" id="level-display">NIV: 1</div>
+          <div class="hud-item" id="combo-display">COMBO x2</div>
         </div>
       </div>
 
-      <!-- Level Up Message -->
-      <div id="levelup-msg">LEVEL UP!</div>
+      <!-- Level Up / Powerup Message -->
+      <div id="center-msg">LEVEL UP!</div>
 
       <!-- Start Screen -->
       <div id="start-screen" class="screen">
         <h1>MATHS <span>INVADERS</span></h1>
         <div id="start-high-score" class="high-score-label">MEILLEUR SCORE: 0</div>
-        <p>Pilote ton vaisseau et détruis les astéroïdes qui contiennent la <strong>bonne réponse</strong> !</p>
-        <p style="color: #aaa; font-size: 0.9rem">Souris/Doigt pour bouger • Tap pour tirer</p>
+
+        <div class="selector-label">CHOISIS TES TABLES</div>
+        <div id="table-buttons" class="table-selector"></div>
+
+        <p style="color: #aaa; font-size: 0.8rem; margin-bottom: 20px">
+          <span style="color: var(--neon-red)">❤ Attention !</span> Tirer sur une mauvaise réponse = -1 Vie
+        </p>
+
         <button class="btn" onclick="startGame()">JOUER</button>
-        <div style="margin-top: 20px">
-          <label style="color: white; font-family: &quot;Press Start 2P&quot;; font-size: 0.7rem">
-            <input type="checkbox" id="sound-toggle" checked /> SON
-          </label>
+
+        <div class="option-row">
+          <label class="checkbox-label"> <input type="checkbox" id="sound-toggle" checked /> SON </label>
+          <label class="checkbox-label" style="color: var(--neon-yellow)"> <input type="checkbox" id="cheat-toggle" /> MODE RÉVISION (Indice) </label>
         </div>
+        <div style="font-size: 0.6rem; color: #888; margin-top: 5px">(Pas de sauvegarde de score en révision)</div>
       </div>
 
       <!-- Game Over Screen -->
       <div id="game-over-screen" class="screen hidden">
         <h1 style="color: var(--neon-red)">GAME OVER</h1>
         <p>Ton score final : <span id="final-score" style="color: white; font-weight: bold; font-size: 1.5rem">0</span></p>
-        <!-- Retrait du style inline pour utiliser la classe CSS corrigée -->
         <div id="new-record-msg" class="hidden">NOUVEAU RECORD !</div>
         <p id="motivation-msg" style="color: var(--neon-green)">Bien joué !</p>
         <div id="end-high-score" class="high-score-label" style="font-size: 0.8rem">MEILLEUR SCORE: 0</div>
@@ -319,194 +408,239 @@
     </div>
 
     <script>
-      // --- Configuration & Setup ---
+      // --- Global Setup ---
       const canvas = document.getElementById("gameCanvas");
       const ctx = canvas.getContext("2d");
 
-      // UI Elements
+      // UI References
       const startScreen = document.getElementById("start-screen");
       const gameOverScreen = document.getElementById("game-over-screen");
       const hud = document.getElementById("hud");
       const scoreEl = document.getElementById("score-display");
+      const livesEl = document.getElementById("lives-display");
       const levelEl = document.getElementById("level-display");
+      const cheatIndEl = document.getElementById("cheat-indicator");
       const questionEl = document.getElementById("question-box");
       const comboEl = document.getElementById("combo-display");
       const finalScoreEl = document.getElementById("final-score");
       const motivationEl = document.getElementById("motivation-msg");
       const soundToggle = document.getElementById("sound-toggle");
+      const cheatToggle = document.getElementById("cheat-toggle");
       const startHighScoreEl = document.getElementById("start-high-score");
       const endHighScoreEl = document.getElementById("end-high-score");
       const newRecordMsg = document.getElementById("new-record-msg");
-      const levelUpMsg = document.getElementById("levelup-msg");
+      const centerMsg = document.getElementById("center-msg");
+      const damageOverlay = document.getElementById("damage-overlay");
+      const tableButtonsContainer = document.getElementById("table-buttons");
 
-      // Game State
+      // --- Game Variables ---
       let gameRunning = false;
       let score = 0;
       let highScore = 0;
       let level = 1;
       let combo = 0;
+      let lives = 3;
+      let maxLives = 3;
       let frames = 0;
-      let currentQuestion = null;
+      let lastTime = 0;
+      let isCheatMode = false;
+
+      // Entities
+      let player;
       let enemies = [];
       let bullets = [];
       let particles = [];
       let stars = [];
-      let player;
-      let spawnRate = 120; // Frames between spawns
-      let enemySpeed = 1.5;
+      let floatingTexts = [];
+      let powerups = [];
 
-      // Math Difficulty Logic
-      let tables = [2, 3, 4, 5, 10]; // Easy tables to start
-
-      // Audio Context
+      // Logic
+      let currentQuestion = null;
+      let selectedTables = [2, 3, 4, 5, 6, 7, 8, 9, 10];
+      let activeTables = [...selectedTables];
+      let enemySpeedBase = 1.5;
+      let scoreForLife = 0;
       let audioCtx = null;
 
-      // --- Local Storage Management ---
-      function loadHighScore() {
-        const saved = localStorage.getItem("mathsInvadersHighScore");
-        if (saved) {
-          highScore = parseInt(saved);
-        }
-        updateHighScoreDisplay();
-      }
+      // --- Audio Engine ---
+      const AudioEngine = {
+        init: function () {
+          if (!audioCtx && soundToggle.checked) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          }
+        },
+        play: function (type) {
+          if (!soundToggle.checked || !audioCtx) return;
+          if (audioCtx.state === "suspended") audioCtx.resume();
 
-      function saveHighScore() {
-        if (score > highScore) {
-          highScore = score;
-          localStorage.setItem("mathsInvadersHighScore", highScore);
-          return true; // New Record
-        }
-        return false;
-      }
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          const now = audioCtx.currentTime;
 
-      function updateHighScoreDisplay() {
-        startHighScoreEl.textContent = `MEILLEUR SCORE: ${highScore}`;
-        endHighScoreEl.textContent = `MEILLEUR SCORE: ${highScore}`;
-      }
-
-      // --- Audio System (Synthesized) ---
-      function initAudio() {
-        if (!audioCtx && soundToggle.checked) {
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-      }
-
-      function playSound(type) {
-        if (!soundToggle.checked || !audioCtx) return;
-        if (audioCtx.state === "suspended") audioCtx.resume();
-
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-
-        const now = audioCtx.currentTime;
-
-        if (type === "shoot") {
-          osc.type = "square";
-          osc.frequency.setValueAtTime(440, now);
-          osc.frequency.exponentialRampToValueAtTime(110, now + 0.1);
-          gain.gain.setValueAtTime(0.05, now);
-          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
-          osc.start(now);
-          osc.stop(now + 0.1);
-        } else if (type === "explode") {
-          osc.type = "sawtooth";
-          osc.frequency.setValueAtTime(100, now);
-          osc.frequency.exponentialRampToValueAtTime(10, now + 0.3);
-          gain.gain.setValueAtTime(0.1, now);
-          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-          osc.start(now);
-          osc.stop(now + 0.3);
-        } else if (type === "levelup") {
-          osc.type = "triangle";
-          osc.frequency.setValueAtTime(300, now);
-          osc.frequency.linearRampToValueAtTime(600, now + 0.2);
-          osc.frequency.linearRampToValueAtTime(900, now + 0.4);
-          gain.gain.setValueAtTime(0.1, now);
-          gain.gain.linearRampToValueAtTime(0, now + 0.5);
-          osc.start(now);
-          osc.stop(now + 0.5);
-        } else if (type === "wrong") {
-          osc.type = "sawtooth";
-          osc.frequency.setValueAtTime(150, now);
-          osc.frequency.linearRampToValueAtTime(100, now + 0.3);
-          gain.gain.setValueAtTime(0.2, now);
-          gain.gain.linearRampToValueAtTime(0, now + 0.3);
-          osc.start(now);
-          osc.stop(now + 0.3);
-        } else if (type === "powerup") {
-          osc.type = "sine";
-          osc.frequency.setValueAtTime(440, now);
-          osc.frequency.linearRampToValueAtTime(880, now + 0.2);
-          gain.gain.setValueAtTime(0.1, now);
-          gain.gain.linearRampToValueAtTime(0, now + 0.2);
-          osc.start(now);
-          osc.stop(now + 0.2);
-        }
-      }
+          switch (type) {
+            case "shoot":
+              osc.type = "square";
+              osc.frequency.setValueAtTime(440, now);
+              osc.frequency.exponentialRampToValueAtTime(110, now + 0.1);
+              gain.gain.setValueAtTime(0.05, now);
+              gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+              osc.start(now);
+              osc.stop(now + 0.1);
+              break;
+            case "explode":
+              osc.type = "sawtooth";
+              osc.frequency.setValueAtTime(100, now);
+              osc.frequency.exponentialRampToValueAtTime(10, now + 0.3);
+              gain.gain.setValueAtTime(0.1, now);
+              gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+              osc.start(now);
+              osc.stop(now + 0.3);
+              break;
+            case "wrong":
+              osc.type = "sawtooth";
+              osc.frequency.setValueAtTime(150, now);
+              osc.frequency.linearRampToValueAtTime(80, now + 0.4);
+              gain.gain.setValueAtTime(0.2, now);
+              gain.gain.linearRampToValueAtTime(0, now + 0.4);
+              osc.start(now);
+              osc.stop(now + 0.4);
+              break;
+            case "powerup":
+              osc.type = "sine";
+              osc.frequency.setValueAtTime(600, now);
+              osc.frequency.linearRampToValueAtTime(1200, now + 0.3);
+              gain.gain.setValueAtTime(0.1, now);
+              gain.gain.linearRampToValueAtTime(0, now + 0.3);
+              osc.start(now);
+              osc.stop(now + 0.3);
+              break;
+            case "levelup":
+              osc.type = "triangle";
+              osc.frequency.setValueAtTime(400, now);
+              osc.frequency.linearRampToValueAtTime(600, now + 0.1);
+              osc.frequency.linearRampToValueAtTime(800, now + 0.2);
+              gain.gain.setValueAtTime(0.1, now);
+              gain.gain.linearRampToValueAtTime(0, now + 0.4);
+              osc.start(now);
+              osc.stop(now + 0.4);
+              break;
+          }
+        },
+      };
 
       // --- Classes ---
 
       class Player {
         constructor() {
-          this.width = 40;
-          this.height = 40;
+          this.width = 46;
+          this.height = 46;
           this.x = canvas.width / 2;
-          this.y = canvas.height - 80;
-          this.color = "#00f3ff";
-          this.speed = 0;
+          this.y = canvas.height - 90;
           this.targetX = canvas.width / 2;
+          this.color = "#00f3ff";
+          this.tilt = 0;
+
+          // Powerup States
+          this.weaponLevel = 1;
+          this.shieldActive = false;
+          this.shieldTimer = 0;
+          this.powerupTimer = 0;
         }
 
         update() {
-          // Smooth movement towards mouse/touch
+          // Movement smoothing
           const dx = this.targetX - this.x;
           this.x += dx * 0.15;
 
-          // Boundary
+          // Tilt calculation based on speed
+          this.tilt = dx * 0.5;
+          if (this.tilt > 20) this.tilt = 20;
+          if (this.tilt < -20) this.tilt = -20;
+
+          // Clamp screen
           if (this.x < this.width / 2) this.x = this.width / 2;
           if (this.x > canvas.width - this.width / 2) this.x = canvas.width - this.width / 2;
+
+          // Timers
+          if (this.shieldTimer > 0) {
+            this.shieldTimer--;
+            if (this.shieldTimer <= 0) this.shieldActive = false;
+          }
+          if (this.powerupTimer > 0) {
+            this.powerupTimer--;
+            if (this.powerupTimer <= 0) this.weaponLevel = 1;
+          }
         }
 
         draw() {
           ctx.save();
           ctx.translate(this.x, this.y);
+          ctx.rotate((this.tilt * Math.PI) / 180); // Apply tilt
 
-          // Combo Glow
-          if (combo > 2) {
-            ctx.shadowBlur = 20 + combo * 2;
-            ctx.shadowColor = combo > 5 ? "#ff00ff" : "#00f3ff";
+          // Shield Effect
+          if (this.shieldActive) {
+            ctx.beginPath();
+            ctx.arc(0, 0, 40, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(0, 255, 157, ${0.5 + Math.sin(frames * 0.2) * 0.3})`;
+            ctx.lineWidth = 3;
+            ctx.stroke();
           }
 
-          // Ship shape
-          ctx.fillStyle = this.color;
+          // Ship Body
+          ctx.shadowBlur = 15;
+          ctx.shadowColor = this.shieldActive ? "#00ff9d" : this.color;
+          ctx.fillStyle = this.shieldActive ? "#ccffee" : this.color;
+
           ctx.beginPath();
           ctx.moveTo(0, -this.height / 2);
           ctx.lineTo(this.width / 2, this.height / 2);
-          ctx.lineTo(0, this.height / 4); // engine indent
+          ctx.lineTo(0, this.height / 3);
           ctx.lineTo(-this.width / 2, this.height / 2);
           ctx.closePath();
           ctx.fill();
 
-          // Engine flame
-          ctx.fillStyle = `rgba(255, 100, 0, ${Math.random()})`;
+          // Engine
+          ctx.shadowBlur = 0;
+          ctx.fillStyle = `rgba(255, 100, 0, ${0.6 + Math.random() * 0.4})`;
           ctx.beginPath();
-          ctx.moveTo(-5, this.height / 4);
-          ctx.lineTo(5, this.height / 4);
-          ctx.lineTo(0, this.height / 2 + Math.random() * 20 + combo * 2); // Flame grows with combo
+          ctx.moveTo(-6, this.height / 3);
+          ctx.lineTo(6, this.height / 3);
+          ctx.lineTo(0, this.height / 3 + 15 + Math.random() * 10 + (this.weaponLevel > 1 ? 10 : 0));
           ctx.fill();
 
           ctx.restore();
         }
 
         shoot() {
-          bullets.push(new Bullet(this.x, this.y - this.height / 2));
-          playSound("shoot");
+          AudioEngine.play("shoot");
 
-          // Recoil effect
-          this.y += 5;
-          setTimeout(() => (this.y -= 5), 50);
+          // Recoil
+          this.y += 4;
+          setTimeout(() => (this.y -= 4), 50);
+
+          if (this.weaponLevel === 1) {
+            bullets.push(new Bullet(this.x, this.y - 20));
+          } else {
+            // Double shot
+            bullets.push(new Bullet(this.x - 15, this.y - 10));
+            bullets.push(new Bullet(this.x + 15, this.y - 10));
+          }
+        }
+
+        activateShield() {
+          this.shieldActive = true;
+          this.shieldTimer = 600; // 10 seconds approx
+          AudioEngine.play("powerup");
+          showCenterMessage("BOUCLIER !", "#00ff9d");
+        }
+
+        activateDouble() {
+          this.weaponLevel = 2;
+          this.powerupTimer = 600;
+          AudioEngine.play("powerup");
+          showCenterMessage("DOUBLE TIR !", "#00f3ff");
         }
       }
 
@@ -514,21 +648,19 @@
         constructor(x, y) {
           this.x = x;
           this.y = y;
-          this.radius = 4;
-          this.speed = 12;
-          this.color = "#00ff9d";
+          this.radius = 5;
+          this.speed = 14;
+          this.color = "#ffffff";
         }
-
         update() {
           this.y -= this.speed;
         }
-
         draw() {
           ctx.beginPath();
           ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
           ctx.fillStyle = this.color;
           ctx.shadowBlur = 10;
-          ctx.shadowColor = this.color;
+          ctx.shadowColor = "#00f3ff";
           ctx.fill();
           ctx.shadowBlur = 0;
         }
@@ -536,16 +668,15 @@
 
       class Enemy {
         constructor(val, isCorrect) {
-          this.radius = 35;
+          this.radius = 32;
           this.x = Math.random() * (canvas.width - this.radius * 2) + this.radius;
-          this.y = -50;
+          this.y = -60;
           this.value = val;
           this.isCorrect = isCorrect;
-          this.speed = enemySpeed + Math.random() * 0.5;
-          this.color = isCorrect ? "#ffffff" : "#ffcece";
-          this.hitColor = isCorrect ? "#00ff9d" : "#ff0055";
+          this.speed = enemySpeedBase + Math.random() * 0.5;
           this.angle = 0;
-          this.spin = (Math.random() - 0.5) * 0.1;
+          this.spin = (Math.random() - 0.5) * 0.15;
+          this.color = "#ffcccc";
         }
 
         update() {
@@ -558,32 +689,119 @@
           ctx.translate(this.x, this.y);
           ctx.rotate(this.angle);
 
-          // Asteroid shape (rough polygon)
           ctx.beginPath();
-          const sides = 6;
+          const sides = 7;
           for (let i = 0; i < sides; i++) {
             const angle = (i / sides) * Math.PI * 2;
-            const r = this.radius * (0.8 + Math.sin(angle * 3) * 0.1);
+            const r = this.radius * (0.85 + Math.sin(angle * 4) * 0.15);
             ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
           }
           ctx.closePath();
 
-          ctx.fillStyle = "#2a2a40";
-          ctx.strokeStyle = "#ff0055";
-          // Visual hint: Correct answer pulsates slightly more? Maybe too easy.
-          // Let's keep it purely math based.
+          ctx.fillStyle = "#2a2a35";
 
+          // Default style
+          ctx.strokeStyle = "#ff0055";
           ctx.lineWidth = 3;
+
+          // CHEAT MODE VISUAL HINT
+          if (isCheatMode && this.isCorrect) {
+            // Flashing green effect
+            const flash = Math.sin(frames * 0.2) > 0;
+            ctx.strokeStyle = flash ? "#00ff00" : "#ffffff";
+            ctx.lineWidth = 5;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = "#00ff00";
+          }
+
           ctx.fill();
           ctx.stroke();
+          ctx.shadowBlur = 0; // Reset shadow
 
           // Text
           ctx.rotate(-this.angle);
           ctx.fillStyle = "white";
-          ctx.font = "bold 20px 'Press Start 2P'";
+          ctx.font = "bold 18px 'Press Start 2P'";
           ctx.textAlign = "center";
           ctx.textBaseline = "middle";
-          ctx.fillText(this.value, 0, 4);
+          ctx.fillText(this.value, 0, 3);
+
+          ctx.restore();
+        }
+      }
+
+      class FloatingText {
+        constructor(text, x, y, color) {
+          this.text = text;
+          this.x = x;
+          this.y = y;
+          this.color = color;
+          this.life = 1.0;
+          this.dy = -1;
+        }
+        update() {
+          this.y += this.dy;
+          this.life -= 0.015;
+        }
+        draw() {
+          ctx.save();
+          ctx.globalAlpha = Math.max(0, this.life);
+          ctx.fillStyle = this.color;
+          ctx.font = "16px 'Press Start 2P'";
+          ctx.textAlign = "center";
+          ctx.shadowBlur = 5;
+          ctx.shadowColor = "black";
+          ctx.fillText(this.text, this.x, this.y);
+          ctx.restore();
+        }
+      }
+
+      class PowerUp {
+        constructor(x, y, type) {
+          this.x = x;
+          this.y = y;
+          this.type = type; // 'shield', 'double', 'life'
+          this.radius = 15;
+          this.speed = 3;
+          this.angle = 0;
+        }
+        update() {
+          this.y += this.speed;
+          this.angle += 0.1;
+        }
+        draw() {
+          ctx.save();
+          ctx.translate(this.x, this.y);
+
+          let color = "#fff";
+          let char = "?";
+          if (this.type === "shield") {
+            color = "#00ff9d";
+            char = "S";
+          }
+          if (this.type === "double") {
+            color = "#00f3ff";
+            char = "D";
+          }
+          if (this.type === "life") {
+            color = "#ff0055";
+            char = "♥";
+          }
+
+          ctx.fillStyle = color;
+          ctx.beginPath();
+          ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.strokeStyle = "white";
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          ctx.fillStyle = "black";
+          ctx.font = "bold 14px sans-serif";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(char, 0, 1);
 
           ctx.restore();
         }
@@ -593,17 +811,19 @@
         constructor(x, y, color) {
           this.x = x;
           this.y = y;
-          this.vx = (Math.random() - 0.5) * 10;
-          this.vy = (Math.random() - 0.5) * 10;
+          const angle = Math.random() * Math.PI * 2;
+          const speed = Math.random() * 5 + 2;
+          this.vx = Math.cos(angle) * speed;
+          this.vy = Math.sin(angle) * speed;
           this.life = 1.0;
           this.color = color;
-          this.size = Math.random() * 5 + 2;
+          this.size = Math.random() * 4 + 2;
         }
         update() {
           this.x += this.vx;
           this.y += this.vy;
-          this.life -= 0.03;
-          this.size *= 0.95;
+          this.life -= 0.04;
+          this.size *= 0.9;
         }
         draw() {
           ctx.save();
@@ -611,85 +831,110 @@
           ctx.fillStyle = this.color;
           ctx.translate(this.x, this.y);
           ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
-          ctx.globalAlpha = 1.0;
           ctx.restore();
         }
       }
 
       class Star {
-        constructor(speedMult = 1) {
+        constructor(speedMult) {
           this.x = Math.random() * canvas.width;
           this.y = Math.random() * canvas.height;
-          this.size = Math.random() * 2 + speedMult * 0.5; // Faster stars are bigger
-          this.baseSpeed = Math.random() * 2 + 0.5;
-          this.speedMult = speedMult;
+          this.size = Math.random() * 2 + speedMult * 0.5;
+          this.baseSpeed = (Math.random() * 2 + 0.5) * speedMult;
         }
         update() {
-          // Move faster based on level
-          let speed = this.baseSpeed * this.speedMult * (1 + level * 0.1);
-          this.y += speed;
-
+          this.y += this.baseSpeed * (1 + level * 0.1);
           if (this.y > canvas.height) {
             this.y = 0;
             this.x = Math.random() * canvas.width;
           }
         }
         draw() {
-          ctx.fillStyle = `rgba(255, 255, 255, ${0.3 * this.speedMult})`;
+          ctx.fillStyle = "rgba(255,255,255,0.4)";
           ctx.fillRect(this.x, this.y, this.size, this.size);
         }
       }
 
-      // --- Game Logic ---
+      // --- Game Management Functions ---
+
+      function initTableButtons() {
+        tableButtonsContainer.innerHTML = "";
+        for (let i = 2; i <= 10; i++) {
+          const btn = document.createElement("button");
+          btn.className = "table-btn active";
+          btn.textContent = i;
+          btn.onclick = () => toggleTable(i, btn);
+          tableButtonsContainer.appendChild(btn);
+        }
+      }
+
+      function toggleTable(num, btn) {
+        const index = selectedTables.indexOf(num);
+        if (index > -1) {
+          if (selectedTables.length > 1) {
+            selectedTables.splice(index, 1);
+            btn.classList.remove("active");
+          } else {
+            // Can't unselect last one
+            btn.style.transform = "scale(1.2)";
+            setTimeout(() => (btn.style.transform = "scale(1)"), 100);
+          }
+        } else {
+          selectedTables.push(num);
+          selectedTables.sort((a, b) => a - b);
+          btn.classList.add("active");
+        }
+      }
 
       function resizeCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        if (player) player.targetX = canvas.width / 2;
-      }
-      window.addEventListener("resize", resizeCanvas);
-
-      function showLevelUp() {
-        levelUpMsg.style.opacity = 1;
-        levelUpMsg.style.transform = "translate(-50%, -50%) scale(1.5)";
-        playSound("levelup");
-        setTimeout(() => {
-          levelUpMsg.style.opacity = 0;
-          levelUpMsg.style.transform = "translate(-50%, -50%) scale(1)";
-        }, 1500);
-      }
-
-      function updateLevel() {
-        const newLevel = Math.floor(score / 500) + 1;
-        if (newLevel > level) {
-          level = newLevel;
-          showLevelUp();
+        if (player) {
+          player.x = canvas.width / 2;
+          player.targetX = canvas.width / 2;
         }
       }
 
+      function showCenterMessage(text, color) {
+        centerMsg.textContent = text;
+        centerMsg.style.color = color;
+        centerMsg.style.opacity = 1;
+        centerMsg.style.transform = "translate(-50%, -50%) scale(1.5)";
+        setTimeout(() => {
+          centerMsg.style.opacity = 0;
+          centerMsg.style.transform = "translate(-50%, -50%) scale(1)";
+        }, 1200);
+      }
+
+      function spawnFloatingText(text, x, y, color) {
+        floatingTexts.push(new FloatingText(text, x, y, color));
+      }
+
+      function dropPowerup(x, y) {
+        const rand = Math.random();
+        let type = null;
+
+        if (rand < 0.05) type = "life";
+        else if (rand < 0.15) type = "shield";
+        else if (rand < 0.3) type = "double";
+
+        if (type) powerups.push(new PowerUp(x, y, type));
+      }
+
       function generateQuestion() {
-        // Adaptive difficulty logic
-        if (score > 1500) tables = [2, 3, 4, 5, 6, 7, 8, 9, 10];
-        else if (score > 800) tables = [3, 4, 5, 6, 7, 8, 10];
-        else if (score > 300) tables = [2, 3, 4, 5, 6, 10];
-        else tables = [2, 3, 4, 5, 10];
+        // Difficulty scaling
+        enemySpeedBase = 1.5 + score / 2000;
 
-        // Increase speed based on score
-        enemySpeed = 1.5 + score / 1500;
-        // Cap spawn rate
-        spawnRate = Math.max(50, 120 - score / 50);
-
-        const a = tables[Math.floor(Math.random() * tables.length)];
-        const b = Math.floor(Math.random() * 9) + 2; // 2 to 10
-
+        const a = activeTables[Math.floor(Math.random() * activeTables.length)];
+        const b = Math.floor(Math.random() * 9) + 2;
         const answer = a * b;
         currentQuestion = { a, b, answer };
 
-        // UI Update
+        // UI Animation
         questionEl.textContent = `${a} x ${b}`;
         questionEl.style.display = "block";
         questionEl.classList.remove("pulse-anim");
-        void questionEl.offsetWidth; // trigger reflow
+        void questionEl.offsetWidth;
         questionEl.classList.add("pulse-anim");
 
         spawnEnemies(answer);
@@ -697,67 +942,189 @@
 
       function spawnEnemies(correctAnswer) {
         enemies = [];
-        const laneCount = Math.floor(canvas.width / 80);
-        const maxEnemies = Math.min(5, laneCount);
+        const laneWidth = 80;
+        const maxLanes = Math.floor(canvas.width / laneWidth);
 
-        // Increase enemy count with difficulty
         let count = 3;
         if (level > 2) count = 4;
-        if (level > 5) count = Math.min(5, maxEnemies);
+        if (level > 5) count = Math.min(5, maxLanes);
 
-        // Determine correct answer position
-        const correctIndex = Math.floor(Math.random() * count);
-
+        // Positions
         const positions = [];
-        const sectionWidth = canvas.width / count;
-        for (let i = 0; i < count; i++) {
-          positions.push(sectionWidth * i + sectionWidth / 2);
-        }
+        const step = canvas.width / count;
+        for (let i = 0; i < count; i++) positions.push(step * i + step / 2);
+
+        const correctIdx = Math.floor(Math.random() * count);
 
         for (let i = 0; i < count; i++) {
           let val;
-          if (i === correctIndex) {
+          if (i === correctIdx) {
             val = correctAnswer;
             enemies.push(new Enemy(val, true));
           } else {
-            // Generate clever wrong answers
+            // Wrong answers logic
             do {
-              const offset = Math.floor(Math.random() * 5) + 1;
+              let offset = Math.floor(Math.random() * 5) + 1;
               val = Math.random() > 0.5 ? correctAnswer + offset : correctAnswer - offset;
-              if (val <= 0) val = correctAnswer + 2;
+              if (val <= 0) val = correctAnswer + Math.floor(Math.random() * 10) + 1;
             } while (val === correctAnswer || enemies.some((e) => e.value === val));
 
             enemies.push(new Enemy(val, false));
           }
-          // Add randomness to X but keep within lanes
           enemies[i].x = positions[i] + (Math.random() * 20 - 10);
-          enemies[i].y = -50 - Math.random() * 100; // Stagger vertical start
+          enemies[i].y = -60 - Math.random() * 80;
         }
       }
 
-      function createExplosion(x, y, color, count = 15) {
-        for (let i = 0; i < count; i++) {
-          particles.push(new Particle(x, y, color));
+      function checkCollisions() {
+        // Bullet vs Enemy
+        for (let i = enemies.length - 1; i >= 0; i--) {
+          const e = enemies[i];
+
+          // Player vs Enemy (Crash)
+          const distPlayer = Math.hypot(e.x - player.x, e.y - player.y);
+          if (distPlayer < e.radius + 30) {
+            if (!player.shieldActive) {
+              loseLife();
+              spawnFloatingText(`${currentQuestion.a}x${currentQuestion.b}=${currentQuestion.answer}`, e.x, e.y - 20, "#ffff00");
+              enemies = [];
+              generateQuestion();
+              return;
+            } else {
+              // Shield destroys enemy
+              createExplosion(e.x, e.y, "#fff");
+              enemies.splice(i, 1);
+              continue;
+            }
+          }
+
+          for (let j = bullets.length - 1; j >= 0; j--) {
+            const b = bullets[j];
+            const dist = Math.hypot(b.x - e.x, b.y - e.y);
+
+            if (dist < e.radius + b.radius) {
+              createExplosion(e.x, e.y, e.color);
+              bullets.splice(j, 1);
+
+              if (e.isCorrect) {
+                // CORRECT
+                handleCorrectAnswer(e.x, e.y);
+                enemies = [];
+                generateQuestion();
+                return; // End loop to prevent logic errors
+              } else {
+                // WRONG
+                handleWrongAnswer(e.x, e.y);
+                enemies.splice(i, 1);
+              }
+              break;
+            }
+          }
+        }
+
+        // Player vs Powerup
+        for (let i = powerups.length - 1; i >= 0; i--) {
+          const p = powerups[i];
+          const dist = Math.hypot(p.x - player.x, p.y - player.y);
+          if (dist < p.radius + 30) {
+            applyPowerup(p.type);
+            powerups.splice(i, 1);
+          } else if (p.y > canvas.height) {
+            powerups.splice(i, 1);
+          }
         }
       }
 
-      function shakeScreen() {
-        const intensity = 5;
-        canvas.style.transform = `translate(${Math.random() * intensity - intensity / 2}px, ${Math.random() * intensity - intensity / 2}px)`;
-        setTimeout(() => {
-          canvas.style.transform = "none";
-        }, 100);
+      function handleCorrectAnswer(x, y) {
+        combo++;
+        let pts = 100 + combo * 25;
+        score += pts;
+
+        spawnFloatingText(`+${pts}`, x, y, "#00ff9d");
+        AudioEngine.play("explode");
+
+        // Chance to drop powerup
+        dropPowerup(x, y);
+
+        checkLevelUp();
+        checkExtraLife(pts);
       }
 
-      function updateGame() {
+      function handleWrongAnswer(x, y) {
+        loseLife();
+        // SHOW CORRECTION
+        spawnFloatingText(`${currentQuestion.a}x${currentQuestion.b}=${currentQuestion.answer}`, x, y, "#ffea00");
+      }
+
+      function applyPowerup(type) {
+        if (type === "life") {
+          if (lives < maxLives) {
+            lives++;
+            spawnFloatingText("VIE +1", player.x, player.y - 40, "#ff0055");
+            AudioEngine.play("levelup"); // reuse sound
+          } else {
+            score += 500;
+            spawnFloatingText("+500", player.x, player.y - 40, "#ff0055");
+          }
+        } else if (type === "shield") {
+          player.activateShield();
+        } else if (type === "double") {
+          player.activateDouble();
+        }
+      }
+
+      function createExplosion(x, y, color) {
+        for (let k = 0; k < 15; k++) particles.push(new Particle(x, y, color));
+      }
+
+      function checkLevelUp() {
+        const newLvl = Math.floor(score / 800) + 1;
+        if (newLvl > level) {
+          level = newLvl;
+          showCenterMessage("LEVEL UP!", "#ffea00");
+          AudioEngine.play("levelup");
+        }
+      }
+
+      function checkExtraLife(points) {
+        scoreForLife += points;
+        if (scoreForLife >= 1500) {
+          if (lives < maxLives) {
+            lives++;
+            spawnFloatingText("EXTRA VIE", canvas.width / 2, canvas.height / 2, "#ff0055");
+            AudioEngine.play("levelup");
+          }
+          scoreForLife -= 1500;
+        }
+      }
+
+      function loseLife() {
+        if (player.shieldActive) return;
+
+        lives--;
+        combo = 0;
+        damageOverlay.style.opacity = 0.8;
+        setTimeout(() => (damageOverlay.style.opacity = 0), 150);
+        AudioEngine.play("wrong");
+
+        // Shake effect
+        canvas.style.transform = `translate(${Math.random() * 10 - 5}px, ${Math.random() * 10 - 5}px)`;
+        setTimeout(() => (canvas.style.transform = "none"), 50);
+
+        if (lives <= 0) gameOver();
+      }
+
+      function gameLoop(timestamp) {
         if (!gameRunning) return;
+        const delta = timestamp - lastTime;
+        lastTime = timestamp;
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         // Background
-        stars.forEach((star) => {
-          star.update();
-          star.draw();
+        stars.forEach((s) => {
+          s.update();
+          s.draw();
         });
 
         // Player
@@ -768,128 +1135,115 @@
         for (let i = bullets.length - 1; i >= 0; i--) {
           bullets[i].update();
           bullets[i].draw();
-
           if (bullets[i].y < 0) bullets.splice(i, 1);
         }
 
+        // Powerups
+        powerups.forEach((p) => {
+          p.update();
+          p.draw();
+        });
+
         // Enemies
+        let enemiesPassed = false;
         for (let i = enemies.length - 1; i >= 0; i--) {
-          const enemy = enemies[i];
-          enemy.update();
-          enemy.draw();
+          const e = enemies[i];
+          e.update();
+          e.draw();
 
-          // Game Over Check (Enemy hits bottom)
-          if (enemy.y > canvas.height + 50) {
-            if (enemy.isCorrect) {
-              enemies.splice(i, 1);
-              combo = 0;
-              updateComboUI();
-              playSound("wrong");
-              shakeScreen();
-              gameOver();
-            } else {
-              enemies.splice(i, 1);
+          if (e.y > canvas.height + 50) {
+            if (e.isCorrect) {
+              loseLife();
+              spawnFloatingText(`Manqué: ${currentQuestion.answer}`, e.x, canvas.height - 100, "#ffea00");
+              enemiesPassed = true;
             }
-            continue;
-          }
-
-          // Collision Check
-          for (let j = bullets.length - 1; j >= 0; j--) {
-            const b = bullets[j];
-            const dist = Math.hypot(b.x - enemy.x, b.y - enemy.y);
-
-            if (dist < enemy.radius + b.radius) {
-              // HIT
-              createExplosion(enemy.x, enemy.y, enemy.hitColor);
-              bullets.splice(j, 1);
-
-              if (enemy.isCorrect) {
-                // CORRECT HIT
-                const bonus = Math.floor(combo / 5) * 50;
-                score += 100 + combo * 20 + bonus;
-                combo++;
-                playSound("powerup");
-                playSound("explode");
-                enemies = [];
-                updateLevel();
-                generateQuestion();
-              } else {
-                // WRONG HIT
-                playSound("wrong");
-                shakeScreen();
-                enemies.splice(i, 1);
-                combo = 0;
-                score = Math.max(0, score - 50);
-              }
-
-              updateUI();
-              updateComboUI();
-              break;
-            }
+            enemies.splice(i, 1);
           }
         }
 
-        // Safety check
-        if (enemies.length === 0 && gameRunning) {
-          // Should be handled by logic above, but just in case
+        if (enemiesPassed) {
+          enemies = [];
+          generateQuestion();
+        } else if (enemies.length === 0 && lives > 0) {
+          generateQuestion(); // Safety regen
         }
 
-        // Particles
+        checkCollisions();
+
+        // Effects
         for (let i = particles.length - 1; i >= 0; i--) {
           particles[i].update();
           particles[i].draw();
           if (particles[i].life <= 0) particles.splice(i, 1);
         }
 
+        for (let i = floatingTexts.length - 1; i >= 0; i--) {
+          floatingTexts[i].update();
+          floatingTexts[i].draw();
+          if (floatingTexts[i].life <= 0) floatingTexts.splice(i, 1);
+        }
+
+        updateHUD();
         frames++;
-        requestAnimationFrame(updateGame);
+        requestAnimationFrame(gameLoop);
       }
 
-      function updateUI() {
+      function updateHUD() {
         scoreEl.textContent = `SCORE: ${score}`;
+        let hearts = "";
+        for (let i = 0; i < lives; i++) hearts += "❤️";
+        livesEl.textContent = hearts;
         levelEl.textContent = `NIV: ${level}`;
-      }
 
-      function updateComboUI() {
         if (combo > 1) {
           comboEl.style.display = "block";
           comboEl.textContent = `COMBO x${combo}`;
-          comboEl.style.fontSize = `${1.5 + Math.min(combo * 0.1, 1)}rem`;
         } else {
           comboEl.style.display = "none";
         }
       }
 
+      // --- States ---
+
       function startGame() {
-        initAudio();
+        AudioEngine.init();
+        activeTables = [...selectedTables];
+        isCheatMode = cheatToggle.checked;
         resizeCanvas();
-        loadHighScore(); // Ensure up to date
 
         score = 0;
         level = 1;
+        lives = 3;
         combo = 0;
-        frames = 0;
+        scoreForLife = 0;
+
+        player = new Player();
+        enemies = [];
         bullets = [];
         particles = [];
-        enemies = [];
-        player = new Player();
+        powerups = [];
+        floatingTexts = [];
 
-        // Parallax Stars
         stars = [];
-        for (let i = 0; i < 40; i++) stars.push(new Star(0.5)); // Slow background stars
-        for (let i = 0; i < 20; i++) stars.push(new Star(1.5)); // Faster foreground stars
+        for (let i = 0; i < 50; i++) stars.push(new Star(0.5));
+        for (let i = 0; i < 25; i++) stars.push(new Star(1.5));
 
         gameRunning = true;
-
         startScreen.classList.add("hidden");
         gameOverScreen.classList.add("hidden");
-        newRecordMsg.classList.add("hidden");
         hud.style.display = "flex";
 
-        updateUI();
-        updateComboUI();
+        if (isCheatMode) {
+          cheatIndEl.style.display = "block";
+          livesEl.style.color = "#888"; // Dim visual for revision
+        } else {
+          cheatIndEl.style.display = "none";
+          livesEl.style.color = "var(--neon-red)";
+        }
+
+        loadHighScore();
         generateQuestion();
-        updateGame();
+        requestAnimationFrame(gameLoop);
       }
 
       function gameOver() {
@@ -899,15 +1253,23 @@
         gameOverScreen.classList.remove("hidden");
         finalScoreEl.textContent = score;
 
-        const isNewRecord = saveHighScore();
-        if (isNewRecord) {
-          newRecordMsg.classList.remove("hidden");
-          motivationEl.textContent = "Tu es une LÉGENDE !";
-        } else {
+        if (isCheatMode) {
           newRecordMsg.classList.add("hidden");
-          if (score < 200) motivationEl.textContent = "Entraîne-toi encore !";
-          else if (score < 1000) motivationEl.textContent = "Bien joué, soldat !";
-          else motivationEl.textContent = "Excellent score !";
+          motivationEl.textContent = "Mode Révision terminé !";
+          finalScoreEl.textContent += " (Non classé)";
+          finalScoreEl.style.fontSize = "1rem";
+        } else {
+          if (score > highScore) {
+            highScore = score;
+            localStorage.setItem("mathsInvadersHighScore", highScore);
+            newRecordMsg.classList.remove("hidden");
+            motivationEl.textContent = "LÉGENDAIRE !";
+            finalScoreEl.style.fontSize = "1.5rem";
+          } else {
+            newRecordMsg.classList.add("hidden");
+            motivationEl.textContent = "Essaie encore !";
+            finalScoreEl.style.fontSize = "1.5rem";
+          }
         }
         updateHighScoreDisplay();
       }
@@ -915,10 +1277,22 @@
       function goToMenu() {
         gameOverScreen.classList.add("hidden");
         startScreen.classList.remove("hidden");
+      }
+
+      function loadHighScore() {
+        const s = localStorage.getItem("mathsInvadersHighScore");
+        if (s) highScore = parseInt(s);
         updateHighScoreDisplay();
       }
 
+      function updateHighScoreDisplay() {
+        const t = `MEILLEUR SCORE: ${highScore}`;
+        startHighScoreEl.textContent = t;
+        endHighScoreEl.textContent = t;
+      }
+
       // --- Inputs ---
+      window.addEventListener("resize", resizeCanvas);
 
       window.addEventListener("mousemove", (e) => {
         if (gameRunning) player.targetX = e.clientX;
@@ -938,7 +1312,6 @@
       window.addEventListener("mousedown", () => {
         if (gameRunning) player.shoot();
       });
-
       window.addEventListener(
         "touchstart",
         (e) => {
@@ -947,8 +1320,8 @@
         { passive: false },
       );
 
-      // Initial Load
-      resizeCanvas();
+      // Init
+      initTableButtons();
       loadHighScore();
     </script>
   </body>
