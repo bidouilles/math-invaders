@@ -1312,10 +1312,40 @@
       window.addEventListener("mousedown", () => {
         if (gameRunning) player.shoot();
       });
+
+      // Gestion tactile améliorée (Tap vs Drag)
+      let touchStartTime = 0;
+
       window.addEventListener(
         "touchstart",
         (e) => {
-          if (gameRunning && e.touches.length === 1) player.shoot();
+          if (gameRunning) {
+            // Support Multitouch : le 2ème doigt tire immédiatement
+            if (e.touches.length > 1) {
+              e.preventDefault();
+              player.shoot();
+              return;
+            }
+
+            // Premier doigt : on commence à bouger mais on ne tire pas encore
+            touchStartTime = Date.now();
+            player.targetX = e.touches[0].clientX;
+          }
+        },
+        { passive: false },
+      );
+
+      window.addEventListener(
+        "touchend",
+        (e) => {
+          if (gameRunning) {
+            // Si le contact a duré moins de 250ms, c'est un TAP -> TIR
+            // Si c'était long (un glisser pour se déplacer), on ne tire pas
+            const duration = Date.now() - touchStartTime;
+            if (duration < 250) {
+              player.shoot();
+            }
+          }
         },
         { passive: false },
       );
