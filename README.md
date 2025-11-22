@@ -13,6 +13,7 @@
   * ❤️ **Vie Supplémentaire :** Restaure un cœur perdu.
 * **Tables Sélectionnables :** Choisissez spécifiquement les tables de multiplication (de 2 à 10) à pratiquer via le menu principal.
 * **Mode Révision :** Un « Mode Triche » qui met en évidence la bonne réponse en vert. Les scores obtenus dans ce mode ne sont pas enregistrés dans le tableau des meilleurs scores.
+* **Révision Ciblée :** À l'écran de fin, un panneau « À RÉVISER » liste automatiquement jusqu'à 5 multiplications les plus souvent manquées pour guider la reprise des tables difficiles.
 * **Visuels Juteux :** Inclut des tremblements d'écran, des explosions de particules, des effets de lueur néon et un basculement dynamique du vaisseau.
 * **Design Responsive :** Fonctionne sur ordinateur (Souris) et mobile/tablette (Contrôles tactiles).
 
@@ -34,6 +35,7 @@
 4. **Évitez de tirer sur les mauvaises réponses** (Perdez 1 Vie ❤️).
 5. **Ne laissez pas la bonne réponse passer** en bas de l'écran (Perdez 1 Vie ❤️).
 6. Survivez aussi longtemps que possible et battez le meilleur score !
+7. Analysez la section **À RÉVISER** après une partie pour cibler les multiplications qui ont posé problème.
 
 ## **🛠️ Installation et utilisation**
 
