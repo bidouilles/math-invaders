@@ -1,57 +1,58 @@
 # **Maths Invaders Ultimate 🚀✖️**
 
-**Maths Invaders Ultimate** is a retro-style arcade space shooter designed to make learning multiplication tables addictive and fun for children. Built entirely in a single HTML file using the HTML5 Canvas API, it combines "juicy" game mechanics with educational drills.
+**Maths Invaders Ultimate** est un jeu de tir spatial arcade au style rétro, conçu pour rendre l'apprentissage des tables de multiplication addictif et amusant pour les enfants. Entièrement construit dans un seul fichier HTML utilisant l'API Canvas HTML5, il combine des mécaniques de jeu « juteuses » avec des exercices éducatifs.
 
-## **🎮 Game Features**
+## **🎮 Fonctionnalités du jeu**
 
-* **Arcade Gameplay:** Pilot a spaceship and destroy asteroids containing the correct answers to multiplication problems.  
-* **Adaptive Difficulty:** The game speeds up and introduces more enemies as the score increases.  
-* **Combo System:** Chain correct answers to increase your multiplier and score points faster.  
-* **Power-ups:** Unlock special abilities during gameplay:  
-  * 🛡️ **Shield:** Destroys enemies on impact without losing a life.  
-  * 🔫 **Double Shot:** Fires two bullets at once for better crowd control.  
-  * ❤️ **Extra Life:** Restores a lost heart.  
-* **Selectable Tables:** Choose specifically which multiplication tables (2 through 10\) to practice via the main menu.  
-* **Revision Mode:** A "Cheat Mode" that highlights the correct answer in green. Scores achieved in this mode are not saved to the High Score table.  
-* **Juicy Visuals:** Includes screen shake, particle explosions, neon glow effects, and dynamic ship banking.  
-* **Responsive Design:** Works on Desktop (Mouse) and Mobile/Tablet (Touch controls).
+* **Gameplay Arcade :** Pilotez un vaisseau spatial et détruisez les astéroïdes contenant les bonnes réponses aux problèmes de multiplication.
+* **Difficulté Adaptive :** Le jeu accélère et introduit davantage d'ennemis à mesure que le score augmente.
+* **Système de Combo :** Enchaînez les bonnes réponses pour augmenter votre multiplicateur et marquer des points plus rapidement.
+* **Power-ups :** Débloquez des capacités spéciales pendant le jeu :
+  * 🛡️ **Bouclier :** Détruit les ennemis au contact sans perdre de vie.
+  * 🔫 **Tir Double :** Tire deux balles à la fois pour un meilleur contrôle de la foule.
+  * ❤️ **Vie Supplémentaire :** Restaure un cœur perdu.
+* **Tables Sélectionnables :** Choisissez spécifiquement les tables de multiplication (de 2 à 10) à pratiquer via le menu principal.
+* **Mode Révision :** Un « Mode Triche » qui met en évidence la bonne réponse en vert. Les scores obtenus dans ce mode ne sont pas enregistrés dans le tableau des meilleurs scores.
+* **Visuels Juteux :** Inclut des tremblements d'écran, des explosions de particules, des effets de lueur néon et un basculement dynamique du vaisseau.
+* **Design Responsive :** Fonctionne sur ordinateur (Souris) et mobile/tablette (Contrôles tactiles).
 
-## **🕹️ How to Play**
+## **🕹️ Comment jouer**
 
-### **Controls**
+### **Contrôles**
 
-* **Desktop:** Move your mouse to steer the ship. Click to shoot.  
-* **Mobile/Tablet:** \* **Drag** anywhere on the screen to move the ship.  
-  * **Tap** quickly to shoot.  
-  * **Multitouch:** You can hold one finger to move and tap with another to rapid-fire.
+* **Ordinateur :** Déplacez votre souris pour diriger le vaisseau. Cliquez pour tirer.
+* **Mobile/Tablette :** 
+  * **Glissez** n'importe où sur l'écran pour déplacer le vaisseau.
+  * **Tapez** rapidement pour tirer.
+  * **Multi-touch :** Vous pouvez maintenir un doigt pour vous déplacer et taper avec un autre pour tirer en rafale.
 
-### **Rules**
+### **Règles**
 
-1. A multiplication question appears at the top (e.g., 6 x 7).  
-2. Asteroids will fall with various numbers.  
-3. **Shoot the asteroid** that contains the correct answer (42).  
-4. **Avoid shooting wrong answers** (Lose 1 Life ❤️).  
-5. **Do not let the correct answer pass** the bottom of the screen (Lose 1 Life ❤️).  
-6. Survive as long as possible and beat the High Score\!
+1. Une question de multiplication apparaît en haut (par exemple, 6 x 7).
+2. Des astéroïdes tomberont avec différents nombres.
+3. **Tirez sur l'astéroïde** qui contient la bonne réponse (42).
+4. **Évitez de tirer sur les mauvaises réponses** (Perdez 1 Vie ❤️).
+5. **Ne laissez pas la bonne réponse passer** en bas de l'écran (Perdez 1 Vie ❤️).
+6. Survivez aussi longtemps que possible et battez le meilleur score !
 
-## **🛠️ Installation & Usage**
+## **🛠️ Installation et utilisation**
 
-This game is a **Single File Application**. It requires no installation, no server, and no external assets (images or sounds are generated programmatically).
+Ce jeu est une **Application Mono-Fichier**. Il ne nécessite aucune installation, aucun serveur et aucun élément externe (les images ou sons sont générés de manière programmatique).
 
-1. Download the maths\_invaders.html file.  
-2. Open the file in any modern web browser (Chrome, Firefox, Safari, Edge).  
-3. Enjoy\!
+1. Téléchargez le fichier maths_invaders.html.
+2. Ouvrez le fichier dans n'importe quel navigateur web moderne (Chrome, Firefox, Safari, Edge).
+3. Amusez-vous !
 
-## **💻 Technical Details**
+## **💻 Détails techniques**
 
-* **Language:** HTML5, CSS3, Vanilla JavaScript (ES6+).  
-* **Rendering:** HTML5 \<canvas\> 2D Context.  
-* **Audio:** Web Audio API (All sound effects are synthesized in real-time; no .mp3 or .wav files required).  
-* **Storage:** Uses localStorage to persist the High Score on the device.
+* **Langage :** HTML5, CSS3, JavaScript Vanilla (ES6+).
+* **Rendu :** Contexte 2D du \<canvas\> HTML5.
+* **Audio :** Web Audio API (Tous les effets sonores sont synthétisés en temps réel ; aucun fichier .mp3 ou .wav requis).
+* **Stockage :** Utilise localStorage pour conserver le meilleur score sur l'appareil.
 
-## **📱 Mobile Optimization**
+## **📱 Optimisation mobile**
 
-The game includes specific event listeners for touchstart, touchmove, and touchend to differentiate between:
+Le jeu inclut des écouteurs d'événements spécifiques pour touchstart, touchmove et touchend afin de différencier entre :
 
-* **Aiming:** Dragging the finger without firing.  
-* **Shooting:** Short taps (\<250ms).
+* **Viser :** Glisser le doigt sans tirer.
+* **Tirer :** Tapotements courts (<250ms).
